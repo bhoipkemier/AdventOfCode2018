@@ -8,6 +8,7 @@ namespace AdventOfCode2018
 	{
 		private static readonly DayCodeBase.DayCodeBase[] CodeBases = {
 			new Day1(),
+			new Day2(), 
 		};
 
 		private static void Main(string[] args)
