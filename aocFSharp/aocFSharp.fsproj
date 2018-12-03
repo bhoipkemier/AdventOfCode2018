@@ -6,11 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Data\Day2_0.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Day1_0.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="DayCodeBase\DayCode.fs" />
     <Compile Include="DayCodeBase\Day1.fs" />
+    <Compile Include="DayCodeBase\Day2.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
