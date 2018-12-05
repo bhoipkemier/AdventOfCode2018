@@ -1,16 +1,18 @@
-﻿using AdventOfCode2018.DayCodeBase;
-using System;
+﻿using System;
+using System.Linq;
 
 namespace AdventOfCode2018
 {
 	internal class Program
 	{
-		private static readonly DayCodeBase.DayCodeBase[] CodeBases = {
-			new Day1(),
-			new Day2(),
-			new Day3(),
-			new Day4(),
-		};
+		private static readonly DayCodeBase.DayCodeBase[] CodeBases = typeof(Program)
+			.Assembly
+			.GetTypes()
+			.Where(c => c.Name.StartsWith("Day") && !c.Name.StartsWith("DayCode"))
+			.OrderBy(c => int.Parse(c.Name.Substring(3)))
+			.Select(c => c.GetConstructor(new Type[] { }).Invoke(new object[] { }))
+			.Cast<DayCodeBase.DayCodeBase>()
+			.ToArray();
 
 		private static void Main(string[] args)
 		{
