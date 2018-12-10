@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode2018.DayCodeBase
@@ -12,7 +13,7 @@ namespace AdventOfCode2018.DayCodeBase
 		private string GetOutputWithMultiplier(int multiplier = 1)
 		{
 			var input = GetData(1).Select(ParseData);
-			return string.Join("\r\n",
+			return string.Join(Environment.NewLine,
 				input.Select(i => new Game(i.Item1, i.Item2 * multiplier))
 					.Select(g => g.PlayGame())
 					.ToArray());
@@ -67,47 +68,30 @@ namespace AdventOfCode2018.DayCodeBase
 
 			private class LoopList<T>
 			{
-				private Item<T> _current;
+				private readonly LinkedList<T> _list;
+				private LinkedListNode<T> _current;
 				public T Value => _current.Value;
 
 				public LoopList(T init)
 				{
-					_current = new Item<T>
-					{
-						Value = init
-					};
-					_current.Before = _current;
-					_current.After = _current;
-				}
-
-				public string Debug()
-				{
-					var cur = _current;
-					var toReturn = $"{cur.Value} ";
-					for (cur = _current.After; cur != _current; cur = cur.After)
-					{
-						toReturn += $"{cur.Value} ";
-					}
-
-					return toReturn;
+					_list = new LinkedList<T>();
+					_list.AddFirst(init);
+					_current = _list.First;
 				}
 
 				public void Insert(T val)
 				{
-					var prev = _current.Before;
-					var next = _current;
-					_current = new Item<T> {Value = val, Before = prev, After = next};
-					prev.After = _current;
-					next.Before = _current;
+					_current = _list.AddBefore(_current, val);
 				}
+
+				private LinkedListNode<T> Next => _current.Next ?? _list.First;
+				private LinkedListNode<T> Previous => _current.Previous ?? _list.Last;
 
 				public void Remove()
 				{
-					var prev = _current.Before;
-					var next = _current.After;
-					prev.After = next;
-					next.Before = prev;
-					_current = next;
+					var toRemove = _current;
+					_current = Next;
+					_list.Remove(toRemove);
 				}
 
 				public void Move(long offset)
@@ -116,27 +100,18 @@ namespace AdventOfCode2018.DayCodeBase
 					{
 						for (var i = 0; i < offset; ++i)
 						{
-							_current = _current.After;
+							_current = Next;
 						}
 					}
 					else
 					{
 						for (var i = 0; i > offset; --i)
 						{
-							_current = _current.Before;
+							_current = Previous;
 						}
 					}
 				}
-
-				public class Item<T>
-				{
-					public Item<T> Before;
-					public Item<T> After;
-					public T Value;
-				}
 			}
-
-
 		}
 	}
 }
