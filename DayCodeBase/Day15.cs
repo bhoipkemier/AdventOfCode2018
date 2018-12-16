@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 
 namespace AdventOfCode2018.DayCodeBase
 {
@@ -10,16 +11,41 @@ namespace AdventOfCode2018.DayCodeBase
 
 		public override string Problem1()
 		{
-			var data = GetData(1);
+			var data = GetData();
 			var games = ParseData(data);
 			foreach (var game in games)
 			{
-				//Debug(game);
 				Fight(game);
 			}
 			return string.Join(Environment.NewLine, games.Select(GetScore));
 		}
-		
+
+		public override string Problem2()
+		{
+			var toReturn = new StringBuilder();
+			var data = GetData(1);
+			var games = ParseData(data);
+			for (var i = 0; i < games.Count; ++i)
+			{
+				var game = ParseData(data)[i];
+				var elfCount = game.Elves.Count;
+				var attackPoints = 3;
+				for (var first = true; first || game.Elves.Count != elfCount; first = false)
+				{
+					game = ParseData(data)[i];
+					attackPoints += 1;
+					foreach (var elf in game.Elves)
+					{
+						elf.AttackPoints = attackPoints;
+					}
+					Fight(game);
+				}
+
+				toReturn.AppendLine($"{GetScore(game)}");
+			}
+			return toReturn.ToString();
+		}
+
 		private static void Fight(Game game)
 		{
 			for (;
