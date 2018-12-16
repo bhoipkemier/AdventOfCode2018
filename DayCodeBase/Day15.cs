@@ -23,7 +23,7 @@ namespace AdventOfCode2018.DayCodeBase
 		public override string Problem2()
 		{
 			var toReturn = new StringBuilder();
-			var data = GetData(1);
+			var data = GetData();
 			var games = ParseData(data);
 			for (var i = 0; i < games.Count; ++i)
 			{
